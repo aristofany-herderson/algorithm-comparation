@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dijkstra vs A* - Dashboard de Resultados</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --dijkstra: #e07a3f;
+        --astar: #3f7ce0;
+        --astar-h0: #9b59b6;
+        --bg: #0f1115;
+        --panel: #171a21;
+        --text: #e8e8ea;
+        --muted: #9a9ea8;
+        --border: #2a2e38;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 24px 64px;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin-bottom: 32px;
+        font-size: 0.95rem;
+      }
+      h2 {
+        font-size: 1.15rem;
+        border-left: 4px solid var(--astar);
+        padding-left: 10px;
+        margin-top: 48px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin: 4px 0 16px;
+        max-width: 780px;
+        line-height: 1.5;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+        gap: 20px;
+        margin-top: 16px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        min-height: 320px;
+      }
+      .panel h3 {
+        margin: 0 0 12px;
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        color: var(--muted);
+        flex-wrap: wrap;
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.82rem;
+        margin-top: 8px;
+      }
+      th,
+      td {
+        text-align: right;
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      tr:hover td {
+        background: #1e222c;
+      }
+      footer {
+        margin-top: 56px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dijkstra vs A* - Dashboard de Resultados</h1>
+    <p class="subtitle">
+      Gerado a partir dos CSVs reais em <code>results/</code> (produzidos por
+      <code>./build/graphsearch --benchmark</code>). Nenhum valor nesta p�gina
+      foi inventado ou estimado - todos v�m diretamente das execu��es
+      instrumentadas.
+    </p>
+
+    <div class="legend">
+      <span
+        ><span class="swatch" style="background: var(--dijkstra)"></span>
+        Dijkstra</span
+      >
+      <span
+        ><span class="swatch" style="background: var(--astar)"></span> A*
+        (heur�stica Euclidiana)</span
+      >
+      <span
+        ><span class="swatch" style="background: var(--astar-h0)"></span> A* com
+        h(n)=0</span
+      >
+    </div>
+
+    <h2>1. Escalabilidade</h2>
+    <p class="note">
+      Grafos geom�tricos (k=6 vizinhos mais pr�ximos), origem=0, destino=�ltimo
+      v�rtice. Eixo X em escala logar�tmica.
+    </p>
+    <div class="grid">
+      <div class="panel">
+        <h3>Tempo m�dio de execu��o (ms, escala log)</h3>
+        <canvas id="chart-scal-time"></canvas>
+      </div>
+      <div class="panel">
+        <h3>N�s processados</h3>
+        <canvas id="chart-scal-nodes"></canvas>
+      </div>
+    </div>
+
+    <h2>2. Densidade do grafo</h2>
+    <p class="note">
+      3000 v�rtices geom�tricos, arestas amostradas at� a densidade alvo (peso =
+      dist�ncia Euclidiana), origem=0, destino=2999.
+    </p>
+    <div class="grid">
+      <div class="panel">
+        <h3>Tempo m�dio de execu��o (ms, escala log)</h3>
+        <canvas id="chart-dens-time"></canvas>
+      </div>
+      <div class="panel">
+        <h3>N�s processados</h3>
+        <canvas id="chart-dens-nodes"></canvas>
+      </div>
+    </div>
+
+    <h2>3. Dist�ncia origem�destino</h2>
+    <p class="note">
+      Mesmo grafo geom�trico (3000 v�rtices, k=6), origem fixa, alvo variando
+      por percentil de dist�ncia Euclidiana (perto / m�dio / longe).
+    </p>
+    <div class="grid">
+      <div class="panel">
+        <h3>N�s processados por categoria</h3>
+        <canvas id="chart-dist-nodes"></canvas>
+      </div>
+      <div class="panel">
+        <h3>Tempo m�dio de execu��o (ms)</h3>
+        <canvas id="chart-dist-time"></canvas>
+      </div>
+    </div>
+
+    <h2>4. Impacto da heur�stica</h2>
+    <p class="note">
+      Mesmo grafo, mesma origem/destino - Dijkstra vs A* com h(n)=0 vs A* com
+      heur�stica Euclidiana.
+    </p>
+    <div class="grid">
+      <div class="panel">
+        <h3>N�s processados</h3>
+        <canvas id="chart-heur-nodes"></canvas>
+      </div>
+      <div class="panel">
+        <h3>Tempo m�dio de execu��o (ms)</h3>
+        <canvas id="chart-heur-time"></canvas>
+      </div>
+    </div>
+
+    <h2>Tabela completa</h2>
+    <div class="panel" style="overflow-x: auto">
+      <table id="raw-table"></table>
+    </div>
+
+    <footer>
+      Dados brutos: <code>results/scalability.csv</code>,
+      <code>results/density.csv</code>, <code>results/distance.csv</code>,
+      <code>results/heuristic.csv</code>. Regenerar ap�s novos benchmarks com:
+      <code>python3 scripts/generate_report.py</code>.
+    </footer>
+
+    <div
+      id="cdn-error"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #5a1f1f;
+        color: #ffd9d9;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        text-align: center;
+        z-index: 999;
+      "
+    >
+      N�o foi poss�vel carregar a biblioteca de gr�ficos (Chart.js) via CDN -
+      verifique sua conex�o com a internet. A tabela de dados brutos no fim da
+      p�gina continua funcionando normalmente.
+    </div>
+
+    <script>
+      const DATA = {
+        scalability: [
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 100,
+            num_edges: 738,
+            density: 0.074545,
+            source: 0,
+            target: 99,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 566.620972,
+            mean_time_ms: 0.002038,
+            median_time_ms: 0.00161,
+            min_time_ms: 0.001556,
+            max_time_ms: 0.009203,
+            stddev_time_ms: 0.001505,
+            nodes_processed: 44,
+            nodes_popped: 55,
+            edges_examined: 320,
+            relaxations: 81,
+            queue_pushes: 82,
+            max_queue_size: 29,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 100,
+            num_edges: 738,
+            density: 0.074545,
+            source: 0,
+            target: 99,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 566.620972,
+            mean_time_ms: 0.001176,
+            median_time_ms: 0.001023,
+            min_time_ms: 0.001003,
+            max_time_ms: 0.004043,
+            stddev_time_ms: 0.000574,
+            nodes_processed: 13,
+            nodes_popped: 17,
+            edges_examined: 92,
+            relaxations: 33,
+            queue_pushes: 34,
+            max_queue_size: 18,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 500,
+            num_edges: 3608,
+            density: 0.014461,
+            source: 0,
+            target: 499,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 823.25973,
+            mean_time_ms: 0.028866,
+            median_time_ms: 0.021257,
+            min_time_ms: 0.014686,
+            max_time_ms: 0.10867,
+            stddev_time_ms: 0.020102,
+            nodes_processed: 460,
+            nodes_popped: 600,
+            edges_examined: 3306,
+            relaxations: 616,
+            queue_pushes: 617,
+            max_queue_size: 65,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 500,
+            num_edges: 3608,
+            density: 0.014461,
+            source: 0,
+            target: 499,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 823.25973,
+            mean_time_ms: 0.006278,
+            median_time_ms: 0.005369,
+            min_time_ms: 0.005228,
+            max_time_ms: 0.021438,
+            stddev_time_ms: 0.003261,
+            nodes_processed: 85,
+            nodes_popped: 109,
+            edges_examined: 601,
+            relaxations: 183,
+            queue_pushes: 184,
+            max_queue_size: 76,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 1000,
+            num_edges: 7094,
+            density: 0.007101,
+            source: 0,
+            target: 999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 110.993652,
+            mean_time_ms: 0.003589,
+            median_time_ms: 0.001422,
+            min_time_ms: 0.001394,
+            max_time_ms: 0.061628,
+            stddev_time_ms: 0.01098,
+            nodes_processed: 32,
+            nodes_popped: 35,
+            edges_examined: 215,
+            relaxations: 59,
+            queue_pushes: 60,
+            max_queue_size: 26,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 1000,
+            num_edges: 7094,
+            density: 0.007101,
+            source: 0,
+            target: 999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 110.993652,
+            mean_time_ms: 0.000954,
+            median_time_ms: 0.000858,
+            min_time_ms: 0.000829,
+            max_time_ms: 0.002668,
+            stddev_time_ms: 0.000366,
+            nodes_processed: 6,
+            nodes_popped: 6,
+            edges_examined: 35,
+            relaxations: 18,
+            queue_pushes: 19,
+            max_queue_size: 14,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 5000,
+            num_edges: 35368,
+            density: 0.001415,
+            source: 0,
+            target: 4999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 474.174597,
+            mean_time_ms: 0.543155,
+            median_time_ms: 0.448278,
+            min_time_ms: 0.391772,
+            max_time_ms: 1.457574,
+            stddev_time_ms: 0.220464,
+            nodes_processed: 2402,
+            nodes_popped: 3209,
+            edges_examined: 16995,
+            relaxations: 3357,
+            queue_pushes: 3358,
+            max_queue_size: 190,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 5000,
+            num_edges: 35368,
+            density: 0.001415,
+            source: 0,
+            target: 4999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 474.174597,
+            mean_time_ms: 0.022028,
+            median_time_ms: 0.016154,
+            min_time_ms: 0.01575,
+            max_time_ms: 0.065692,
+            stddev_time_ms: 0.011003,
+            nodes_processed: 226,
+            nodes_popped: 304,
+            edges_examined: 1599,
+            relaxations: 442,
+            queue_pushes: 443,
+            max_queue_size: 140,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 10000,
+            num_edges: 70252,
+            density: 0.000703,
+            source: 0,
+            target: 9999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 709.946233,
+            mean_time_ms: 2.336745,
+            median_time_ms: 2.108184,
+            min_time_ms: 1.661684,
+            max_time_ms: 5.593048,
+            stddev_time_ms: 0.789879,
+            nodes_processed: 7952,
+            nodes_popped: 10717,
+            edges_examined: 55849,
+            relaxations: 10947,
+            queue_pushes: 10948,
+            max_queue_size: 265,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 10000,
+            num_edges: 70252,
+            density: 0.000703,
+            source: 0,
+            target: 9999,
+            seed: 42,
+            repetitions: 30,
+            found: 1,
+            cost: 709.946233,
+            mean_time_ms: 0.305651,
+            median_time_ms: 0.283253,
+            min_time_ms: 0.25364,
+            max_time_ms: 0.576886,
+            stddev_time_ms: 0.072948,
+            nodes_processed: 1000,
+            nodes_popped: 1536,
+            edges_examined: 7028,
+            relaxations: 1863,
+            queue_pushes: 1864,
+            max_queue_size: 331,
+          },
+        ],
+        density: [
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 8998,
+            density: 0.001,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 0,
+            cost: null,
+            mean_time_ms: 0.618852,
+            median_time_ms: 0.472658,
+            min_time_ms: 0.409854,
+            max_time_ms: 2.900069,
+            stddev_time_ms: 0.454436,
+            nodes_processed: 2821,
+            nodes_popped: 3211,
+            edges_examined: 8966,
+            relaxations: 3210,
+            queue_pushes: 3211,
+            max_queue_size: 1069,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 8998,
+            density: 0.001,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 0,
+            cost: null,
+            mean_time_ms: 0.660082,
+            median_time_ms: 0.557502,
+            min_time_ms: 0.507414,
+            max_time_ms: 1.629303,
+            stddev_time_ms: 0.263532,
+            nodes_processed: 2821,
+            nodes_popped: 3345,
+            edges_examined: 8966,
+            relaxations: 3344,
+            queue_pushes: 3345,
+            max_queue_size: 1092,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 44986,
+            density: 0.005,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 1133.003542,
+            mean_time_ms: 0.894707,
+            median_time_ms: 0.724257,
+            min_time_ms: 0.616757,
+            max_time_ms: 3.123909,
+            stddev_time_ms: 0.504415,
+            nodes_processed: 2230,
+            nodes_popped: 2769,
+            edges_examined: 34285,
+            relaxations: 5564,
+            queue_pushes: 5565,
+            max_queue_size: 3853,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 44986,
+            density: 0.005,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 1133.003542,
+            mean_time_ms: 0.314059,
+            median_time_ms: 0.209302,
+            min_time_ms: 0.156941,
+            max_time_ms: 1.548122,
+            stddev_time_ms: 0.303314,
+            nodes_processed: 351,
+            nodes_popped: 371,
+            edges_examined: 5479,
+            relaxations: 3189,
+            queue_pushes: 3190,
+            max_queue_size: 2820,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 179940,
+            density: 0.02,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 423.333571,
+            mean_time_ms: 0.723694,
+            median_time_ms: 0.366655,
+            min_time_ms: 0.320939,
+            max_time_ms: 7.712982,
+            stddev_time_ms: 1.407784,
+            nodes_processed: 444,
+            nodes_popped: 521,
+            edges_examined: 26730,
+            relaxations: 6350,
+            queue_pushes: 6351,
+            max_queue_size: 5831,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 179940,
+            density: 0.02,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 423.333571,
+            mean_time_ms: 0.238746,
+            median_time_ms: 0.106814,
+            min_time_ms: 0.081637,
+            max_time_ms: 2.811476,
+            stddev_time_ms: 0.504981,
+            nodes_processed: 79,
+            nodes_popped: 82,
+            edges_examined: 4585,
+            relaxations: 2825,
+            queue_pushes: 2826,
+            max_queue_size: 2745,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 449850,
+            density: 0.05,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 61.929108,
+            mean_time_ms: 0.559538,
+            median_time_ms: 0.009629,
+            min_time_ms: 0.009562,
+            max_time_ms: 16.498243,
+            stddev_time_ms: 3.010341,
+            nodes_processed: 5,
+            nodes_popped: 5,
+            edges_examined: 610,
+            relaxations: 572,
+            queue_pushes: 573,
+            max_queue_size: 569,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 449850,
+            density: 0.05,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 61.929108,
+            mean_time_ms: 0.004793,
+            median_time_ms: 0.004313,
+            min_time_ms: 0.004232,
+            max_time_ms: 0.016866,
+            stddev_time_ms: 0.002301,
+            nodes_processed: 2,
+            nodes_popped: 2,
+            edges_examined: 156,
+            relaxations: 156,
+            queue_pushes: 157,
+            max_queue_size: 156,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 899700,
+            density: 0.1,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 61.929108,
+            mean_time_ms: 0.89742,
+            median_time_ms: 0.033981,
+            min_time_ms: 0.028632,
+            max_time_ms: 25.827352,
+            stddev_time_ms: 4.708526,
+            nodes_processed: 9,
+            nodes_popped: 9,
+            edges_examined: 2446,
+            relaxations: 1937,
+            queue_pushes: 1938,
+            max_queue_size: 1930,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "",
+            num_vertices: 3000,
+            num_edges: 899700,
+            density: 0.1,
+            source: 0,
+            target: 2999,
+            seed: 7,
+            repetitions: 30,
+            found: 1,
+            cost: 61.929108,
+            mean_time_ms: 0.008548,
+            median_time_ms: 0.00758,
+            min_time_ms: 0.0072,
+            max_time_ms: 0.024265,
+            stddev_time_ms: 0.003221,
+            nodes_processed: 2,
+            nodes_popped: 2,
+            edges_examined: 311,
+            relaxations: 311,
+            queue_pushes: 312,
+            max_queue_size: 311,
+          },
+        ],
+        distance: [
+          {
+            algorithm: "dijkstra",
+            label: "near",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 2115,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 155.069511,
+            mean_time_ms: 0.01005,
+            median_time_ms: 0.006646,
+            min_time_ms: 0.006492,
+            max_time_ms: 0.038509,
+            stddev_time_ms: 0.007567,
+            nodes_processed: 149,
+            nodes_popped: 181,
+            edges_examined: 1031,
+            relaxations: 247,
+            queue_pushes: 248,
+            max_queue_size: 68,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "near",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 2115,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 155.069511,
+            mean_time_ms: 0.002858,
+            median_time_ms: 0.002568,
+            min_time_ms: 0.002469,
+            max_time_ms: 0.00764,
+            stddev_time_ms: 0.000974,
+            nodes_processed: 21,
+            nodes_popped: 24,
+            edges_examined: 138,
+            relaxations: 50,
+            queue_pushes: 51,
+            max_queue_size: 30,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "medium",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 1611,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 443.786926,
+            mean_time_ms: 0.243103,
+            median_time_ms: 0.228814,
+            min_time_ms: 0.20115,
+            max_time_ms: 0.372624,
+            stddev_time_ms: 0.041673,
+            nodes_processed: 1407,
+            nodes_popped: 1854,
+            edges_examined: 10012,
+            relaxations: 2001,
+            queue_pushes: 2002,
+            max_queue_size: 174,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "medium",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 1611,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 443.786926,
+            mean_time_ms: 0.008086,
+            median_time_ms: 0.00609,
+            min_time_ms: 0.005897,
+            max_time_ms: 0.027272,
+            stddev_time_ms: 0.004785,
+            nodes_processed: 71,
+            nodes_popped: 82,
+            edges_examined: 495,
+            relaxations: 164,
+            queue_pushes: 165,
+            max_queue_size: 84,
+          },
+          {
+            algorithm: "dijkstra",
+            label: "far",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 1281,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 771.622609,
+            mean_time_ms: 0.517884,
+            median_time_ms: 0.480293,
+            min_time_ms: 0.441805,
+            max_time_ms: 0.738641,
+            stddev_time_ms: 0.086444,
+            nodes_processed: 2826,
+            nodes_popped: 3771,
+            edges_examined: 19948,
+            relaxations: 3839,
+            queue_pushes: 3840,
+            max_queue_size: 180,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "far",
+            num_vertices: 3000,
+            num_edges: 21188,
+            density: 0.002355,
+            source: 0,
+            target: 1281,
+            seed: 123,
+            repetitions: 30,
+            found: 1,
+            cost: 771.622609,
+            mean_time_ms: 0.040812,
+            median_time_ms: 0.034807,
+            min_time_ms: 0.027373,
+            max_time_ms: 0.097471,
+            stddev_time_ms: 0.018259,
+            nodes_processed: 329,
+            nodes_popped: 472,
+            edges_examined: 2329,
+            relaxations: 656,
+            queue_pushes: 657,
+            max_queue_size: 187,
+          },
+        ],
+        heuristic: [
+          {
+            algorithm: "dijkstra",
+            label: "n/a",
+            num_vertices: 3000,
+            num_edges: 21272,
+            density: 0.002364,
+            source: 0,
+            target: 2999,
+            seed: 99,
+            repetitions: 30,
+            found: 1,
+            cost: 826.31374,
+            mean_time_ms: 0.329315,
+            median_time_ms: 0.324334,
+            min_time_ms: 0.30944,
+            max_time_ms: 0.406375,
+            stddev_time_ms: 0.020741,
+            nodes_processed: 2130,
+            nodes_popped: 2856,
+            edges_examined: 15103,
+            relaxations: 2925,
+            queue_pushes: 2926,
+            max_queue_size: 123,
+          },
+          {
+            algorithm: "astar_h0",
+            label: "h(n)=0",
+            num_vertices: 3000,
+            num_edges: 21272,
+            density: 0.002364,
+            source: 0,
+            target: 2999,
+            seed: 99,
+            repetitions: 30,
+            found: 1,
+            cost: 826.31374,
+            mean_time_ms: 0.458021,
+            median_time_ms: 0.358152,
+            min_time_ms: 0.33698,
+            max_time_ms: 2.81295,
+            stddev_time_ms: 0.44974,
+            nodes_processed: 2130,
+            nodes_popped: 2856,
+            edges_examined: 15103,
+            relaxations: 2925,
+            queue_pushes: 2926,
+            max_queue_size: 123,
+          },
+          {
+            algorithm: "astar_euclidean",
+            label: "euclidean",
+            num_vertices: 3000,
+            num_edges: 21272,
+            density: 0.002364,
+            source: 0,
+            target: 2999,
+            seed: 99,
+            repetitions: 30,
+            found: 1,
+            cost: 826.31374,
+            mean_time_ms: 0.054806,
+            median_time_ms: 0.050271,
+            min_time_ms: 0.036355,
+            max_time_ms: 0.11422,
+            stddev_time_ms: 0.017386,
+            nodes_processed: 388,
+            nodes_popped: 565,
+            edges_examined: 2751,
+            relaxations: 753,
+            queue_pushes: 754,
+            max_queue_size: 198,
+          },
+        ],
+      };
+
+      if (typeof Chart === "undefined") {
+        document.getElementById("cdn-error").style.display = "block";
+      } else {
+        const COLORS = {
+          dijkstra: "#e07a3f",
+          astar_euclidean: "#3f7ce0",
+          astar_h0: "#9b59b6",
+        };
+        const LABELS = {
+          dijkstra: "Dijkstra",
+          astar_euclidean: "A* (Euclidiana)",
+          astar_h0: "A* (h=0)",
+        };
+
+        Chart.defaults.color = "#9a9ea8";
+        Chart.defaults.borderColor = "#2a2e38";
+        Chart.defaults.font.size = 12;
+
+        function byAlgo(rows) {
+          const out = {};
+          for (const r of rows) {
+            if (!out[r.algorithm]) out[r.algorithm] = [];
+            out[r.algorithm].push(r);
+          }
+          return out;
+        }
+
+        function lineChart(canvasId, rows, xKey, yKey, xLabel, yLabel, logY) {
+          const grouped = byAlgo(rows);
+          const datasets = Object.entries(grouped).map(([algo, pts]) => ({
+            label: LABELS[algo] || algo,
+            data: pts.map((p) => ({ x: p[xKey], y: p[yKey] })),
+            borderColor: COLORS[algo] || "#888",
+            backgroundColor: COLORS[algo] || "#888",
+            tension: 0.15,
+            pointRadius: 4,
+          }));
+          new Chart(document.getElementById(canvasId), {
+            type: "line",
+            data: { datasets },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: "logarithmic",
+                  title: { display: true, text: xLabel },
+                },
+                y: {
+                  type: logY ? "logarithmic" : "linear",
+                  title: { display: true, text: yLabel },
+                },
+              },
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+        }
+
+        function barChart(canvasId, rows, xKey, yKey, xLabel, yLabel, logY) {
+          const labels = [...new Set(rows.map((r) => r[xKey]))];
+          const grouped = byAlgo(rows);
+          const datasets = Object.entries(grouped).map(([algo, pts]) => {
+            const byLabel = Object.fromEntries(
+              pts.map((p) => [p[xKey], p[yKey]]),
+            );
+            return {
+              label: LABELS[algo] || algo,
+              data: labels.map((l) => byLabel[l] ?? 0),
+              backgroundColor: COLORS[algo] || "#888",
+            };
+          });
+          new Chart(document.getElementById(canvasId), {
+            type: "bar",
+            data: { labels, datasets },
+            options: {
+              responsive: true,
+              scales: {
+                x: { title: { display: true, text: xLabel } },
+                y: {
+                  type: logY ? "logarithmic" : "linear",
+                  title: { display: true, text: yLabel },
+                },
+              },
+              plugins: { legend: { position: "bottom" } },
+            },
+          });
+        }
+
+        if (DATA.scalability.length) {
+          lineChart(
+            "chart-scal-time",
+            DATA.scalability,
+            "num_vertices",
+            "mean_time_ms",
+            "V�rtices",
+            "ms",
+            true,
+          );
+          lineChart(
+            "chart-scal-nodes",
+            DATA.scalability,
+            "num_vertices",
+            "nodes_processed",
+            "V�rtices",
+            "n�s processados",
+            true,
+          );
+        }
+        if (DATA.density.length) {
+          lineChart(
+            "chart-dens-time",
+            DATA.density,
+            "density",
+            "mean_time_ms",
+            "Densidade",
+            "ms",
+            true,
+          );
+          lineChart(
+            "chart-dens-nodes",
+            DATA.density,
+            "density",
+            "nodes_processed",
+            "Densidade",
+            "n�s processados",
+            true,
+          );
+        }
+        if (DATA.distance.length) {
+          const order = { near: 0, medium: 1, far: 2 };
+          const sorted = [...DATA.distance].sort(
+            (a, b) => order[a.label] - order[b.label],
+          );
+          barChart(
+            "chart-dist-nodes",
+            sorted,
+            "label",
+            "nodes_processed",
+            "Categoria",
+            "n�s processados",
+            false,
+          );
+          barChart(
+            "chart-dist-time",
+            sorted,
+            "label",
+            "mean_time_ms",
+            "Categoria",
+            "ms",
+            false,
+          );
+        }
+        if (DATA.heuristic.length) {
+          barChart(
+            "chart-heur-nodes",
+            DATA.heuristic,
+            "algorithm",
+            "nodes_processed",
+            "",
+            "n�s processados",
+            false,
+          );
+          barChart(
+            "chart-heur-time",
+            DATA.heuristic,
+            "algorithm",
+            "mean_time_ms",
+            "",
+            "ms",
+            false,
+          );
+        }
+      } // fim do bloco "if (typeof Chart !== 'undefined')"
+
+      // Raw data table (all experiments concatenated) - independe de Chart.js.
+      const allRows = [
+        ...DATA.scalability.map((r) => ({ experiment: "scalability", ...r })),
+        ...DATA.density.map((r) => ({ experiment: "density", ...r })),
+        ...DATA.distance.map((r) => ({ experiment: "distance", ...r })),
+        ...DATA.heuristic.map((r) => ({ experiment: "heuristic", ...r })),
+      ];
+      if (allRows.length) {
+        const cols = [
+          "experiment",
+          "algorithm",
+          "label",
+          "num_vertices",
+          "num_edges",
+          "density",
+          "target",
+          "found",
+          "cost",
+          "mean_time_ms",
+          "nodes_processed",
+          "edges_examined",
+          "relaxations",
+          "queue_pushes",
+        ];
+        const table = document.getElementById("raw-table");
+        const thead = document.createElement("thead");
+        thead.innerHTML =
+          "<tr>" + cols.map((c) => `<th>${c}</th>`).join("") + "</tr>";
+        table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        for (const r of allRows) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = cols
+            .map((c) => {
+              let v = r[c];
+              if (typeof v === "number")
+                v = Number.isInteger(v) ? v : v.toFixed(4);
+              return `<td>${v ?? ""}</td>`;
+            })
+            .join("");
+          tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+      }
+    </script>
+  </body>
+</html>
