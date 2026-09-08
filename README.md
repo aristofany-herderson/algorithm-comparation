@@ -307,15 +307,15 @@ destino = último vértice, seed = 42.
 |      V | E (arcos) | Algoritmo | Tempo médio (ms) | Nós processados | Arestas examinadas | Pushes na fila |
 | -----: | --------: | --------- | ---------------: | --------------: | -----------------: | -------------: |
 |    100 |       738 | Dijkstra  |           0.0021 |              44 |                320 |             82 |
-|    100 |       738 | A\*       |           0.0012 |              13 |                 92 |             34 |
-|    500 |     3 608 | Dijkstra  |           0.2084 |             460 |              3 306 |            617 |
-|    500 |     3 608 | A\*       |           0.0064 |              85 |                601 |            184 |
-|  1 000 |     7 094 | Dijkstra  |           0.0056 |              32 |                215 |             60 |
-|  1 000 |     7 094 | A\*       |           0.0011 |               6 |                 35 |             19 |
-|  5 000 |    35 368 | Dijkstra  |           0.4894 |           2 402 |             16 995 |          3 358 |
-|  5 000 |    35 368 | A\*       |           0.0234 |             226 |              1 599 |            443 |
-| 10 000 |    70 252 | Dijkstra  |           2.1045 |           7 952 |             55 849 |         10 948 |
-| 10 000 |    70 252 | A\*       |           0.2788 |           1 000 |              7 028 |          1 864 |
+|    100 |       738 | A\*       |           0.0013 |              13 |                 92 |             34 |
+|    500 |     3 608 | Dijkstra  |           0.0156 |             460 |              3 306 |            617 |
+|    500 |     3 608 | A\*       |           0.0050 |              85 |                601 |            184 |
+|  1 000 |     7 094 | Dijkstra  |           0.0017 |              32 |                215 |             60 |
+|  1 000 |     7 094 | A\*       |           0.0012 |               6 |                 35 |             19 |
+|  5 000 |    35 368 | Dijkstra  |           0.1837 |           2 402 |             16 995 |          3 358 |
+|  5 000 |    35 368 | A\*       |           0.0214 |             226 |              1 599 |            443 |
+| 10 000 |    70 252 | Dijkstra  |           0.7312 |           7 952 |             55 849 |         10 948 |
+| 10 000 |    70 252 | A\*       |           0.1127 |           1 000 |              7 028 |          1 864 |
 
 Em todos os tamanhos, os custos finais reportados por Dijkstra e A*
 coincidem (validado também pelos testes de corretude), e A* processa uma
@@ -346,16 +346,16 @@ destino = 2 999, seed = 7.
 
 | Densidade | E (arcos) | Algoritmo |     Encontrado     | Tempo médio (ms) | Nós processados | Arestas examinadas |
 | --------: | --------: | --------- | :----------------: | ---------------: | --------------: | -----------------: |
-|     0.001 |     8 998 | Dijkstra  |        não         |           0.4227 |           2 821 |              8 966 |
-|     0.001 |     8 998 | A\*       |        não         |           0.5074 |           2 821 |              8 966 |
-|     0.005 |    44 986 | Dijkstra  | sim (custo 1133.0) |           0.7791 |           2 230 |             34 285 |
-|     0.005 |    44 986 | A\*       | sim (custo 1133.0) |           0.1786 |             351 |              5 479 |
-|     0.020 |   179 940 | Dijkstra  | sim (custo 423.3)  |           0.4794 |             444 |             26 730 |
-|     0.020 |   179 940 | A\*       | sim (custo 423.3)  |           0.0925 |              79 |              4 585 |
-|     0.050 |   449 850 | Dijkstra  |  sim (custo 61.9)  |           0.2391 |               5 |                610 |
-|     0.050 |   449 850 | A\*       |  sim (custo 61.9)  |           0.0044 |               2 |                156 |
-|     0.100 |   899 700 | Dijkstra  |  sim (custo 61.9)  |           0.8637 |               9 |              2 446 |
-|     0.100 |   899 700 | A\*       |  sim (custo 61.9)  |           0.0080 |               2 |                311 |
+|     0.001 |     8 998 | Dijkstra  |        não         |           0.1521 |           2 821 |              8 966 |
+|     0.001 |     8 998 | A\*       |        não         |           0.2265 |           2 821 |              8 966 |
+|     0.005 |    44 986 | Dijkstra  | sim (custo 1133.0) |           0.3438 |           2 230 |             34 285 |
+|     0.005 |    44 986 | A\*       | sim (custo 1133.0) |           0.1068 |             351 |              5 479 |
+|     0.020 |   179 940 | Dijkstra  | sim (custo 423.3)  |           0.1948 |             444 |             26 730 |
+|     0.020 |   179 940 | A\*       | sim (custo 423.3)  |           0.0868 |              79 |              4 585 |
+|     0.050 |   449 850 | Dijkstra  |  sim (custo 61.9)  |           0.0118 |               5 |                610 |
+|     0.050 |   449 850 | A\*       |  sim (custo 61.9)  |           0.0046 |               2 |                156 |
+|     0.100 |   899 700 | Dijkstra  |  sim (custo 61.9)  |           0.0246 |               9 |              2 446 |
+|     0.100 |   899 700 | A\*       |  sim (custo 61.9)  |           0.0058 |               2 |                311 |
 
 Na densidade mais baixa (0.001), a origem e o destino simplesmente **não
 estão conectados** no grafo amostrado — os dois algoritmos exploram
@@ -379,12 +379,12 @@ fixa, alvo escolhido por percentil de distância Euclidiana até a origem
 
 | Categoria | Alvo |  Custo | Algoritmo | Tempo médio (ms) | Nós processados | Arestas examinadas |
 | --------- | ---: | -----: | --------- | ---------------: | --------------: | -----------------: |
-| perto     | 2115 | 155.07 | Dijkstra  |           0.0121 |             149 |              1 031 |
-| perto     | 2115 | 155.07 | A\*       |           0.0027 |              21 |                138 |
-| médio     | 1611 | 443.79 | Dijkstra  |           0.2304 |           1 407 |             10 012 |
-| médio     | 1611 | 443.79 | A\*       |           0.0070 |              71 |                495 |
-| longe     | 1281 | 771.62 | Dijkstra  |           0.4928 |           2 826 |             19 948 |
-| longe     | 1281 | 771.62 | A\*       |           0.0438 |             329 |              2 329 |
+| perto     | 2115 | 155.07 | Dijkstra  |           0.0063 |             149 |              1 031 |
+| perto     | 2115 | 155.07 | A\*       |           0.0025 |              21 |                138 |
+| médio     | 1611 | 443.79 | Dijkstra  |           0.0877 |           1 407 |             10 012 |
+| médio     | 1611 | 443.79 | A\*       |           0.0054 |              71 |                495 |
+| longe     | 1281 | 771.62 | Dijkstra  |           0.2225 |           2 826 |             19 948 |
+| longe     | 1281 | 771.62 | A\*       |           0.0209 |             329 |              2 329 |
 
 A razão nós-processados-Dijkstra / nós-processados-A* cresce com a
 distância: ≈7.1× perto, ≈19.8× no meio, ≈8.6× longe (o grafo geométrico não
@@ -402,9 +402,9 @@ destino (2999), comparando três configurações:
 
 | Algoritmo | h(n)       | Tempo médio (ms) | Nós processados | Arestas examinadas | Relaxamentos |
 | --------- | ---------- | ---------------: | --------------: | -----------------: | -----------: |
-| Dijkstra  | —          |           0.3776 |           2 130 |             15 103 |        2 925 |
-| A\*       | 0          |           0.3647 |           2 130 |             15 103 |        2 925 |
-| A\*       | Euclidiana |           0.0637 |             388 |              2 751 |          753 |
+| Dijkstra  | —          |           0.1518 |           2 130 |             15 103 |        2 925 |
+| A\*       | 0          |           0.1601 |           2 130 |             15 103 |        2 925 |
+| A\*       | Euclidiana |           0.0238 |             388 |              2 751 |          753 |
 
 Com `h(n) = 0`, `f(n) = g(n)`, e A* processa **exatamente** o mesmo número
 de nós, examina exatamente o mesmo número de arestas e faz exatamente o
@@ -417,21 +417,20 @@ Isso é a confirmação empírica direta de que, sem uma heurística informativa
 A\* degenera para o mesmo comportamento de exploração de Dijkstra.
 
 Com a heurística Euclidiana, os nós processados caem de 2 130 para 388
-(≈5.5× menos) e o tempo médio cai de ~0.37 ms para ~0.06 ms (≈5.9× mais
+(≈5.5× menos) e o tempo médio cai de ~0.15 ms para ~0.02 ms (≈6.4× mais
 rápido).
 
-### 11.5 Dashboard visual
+### 11.5 Gráficos
 
-Além das tabelas acima, o script `scripts/generate_report.py` lê os quatro
-CSVs em `results/` e gera `results/dashboard.html` — uma página estática
-(sem servidor, sem dependências além de Chart.js via CDN) com os mesmos
-dados renderizados como gráficos: tempo × número de vértices (escala log)
-e nós processados × número de vértices na escalabilidade; tempo e nós
+Além das tabelas acima, o script `scripts/generate_plots.py` lê os quatro
+CSVs em `results/` (via pandas) e gera, com matplotlib, PNGs em
+`results/plots/`: tempo × número de vértices (escala log) e nós
+processados × número de vértices na escalabilidade; tempo e nós
 processados × densidade; nós processados e tempo por categoria de
-distância; e a comparação de três barras (Dijkstra / A* h=0 / A*
-Euclidiana) do experimento de heurística. Todos os números do dashboard
-são os mesmos das tabelas acima — o script só lê o CSV e desenha, não
-recalcula nada. Veja a Seção 16 para o comando exato.
+distância; e a comparação de barras (Dijkstra / A* h=0 / A* Euclidiana)
+do experimento de heurística. Todos os números dos gráficos são os
+mesmos das tabelas acima — o script só lê o CSV e desenha, não recalcula
+nada. Veja a Seção 16 para o comando exato.
 
 <br>
 
@@ -782,21 +781,21 @@ qualquer falha real de escrita (ex.: disco cheio, sem permissão) agora
 gera uma mensagem de erro clara em vez de terminar silenciosamente ou
 travar.
 
-### Gerar o dashboard visual (gráficos)
+### Gerar os gráficos
 
-Depois de rodar `--benchmark` (para gerar os CSVs), gere o painel visual
+Depois de rodar `--benchmark` (para gerar os CSVs), gere os gráficos
 com:
 
 ```bash
-python3 scripts/generate_report.py
+pip install matplotlib pandas
+python3 scripts/generate_plots.py
 ```
 
-Isso cria `results/dashboard.html` — abra esse arquivo em qualquer
-navegador (não precisa de servidor, internet só é usada para carregar a
-biblioteca de gráficos Chart.js via CDN). O script só usa a biblioteca
-padrão do Python (`csv`, `json`, `os`) — nada para instalar. Ele lê os
-CSVs tal como estão em `results/`, então os gráficos sempre refletem os
-dados da última execução de `--benchmark`.
+Isso cria PNGs em `results/plots/` (`scalability.png`, `density.png`,
+`distance.png`, `heuristic.png`) — abra os arquivos diretamente em
+qualquer visualizador de imagens. O script depende de `matplotlib` e
+`pandas`. Ele lê os CSVs tal como estão em `results/`, então os gráficos
+sempre refletem os dados da última execução de `--benchmark`.
 
 <br>
 
@@ -826,14 +825,14 @@ project/
 │   ├── tests.cpp
 │   └── benchmark.cpp
 ├── scripts/
-│   └── generate_report.py # gera results/dashboard.html (gráficos) a partir dos CSVs reais
+│   └── generate_plots.py  # gera results/plots/*.png a partir dos CSVs reais
 ├── tests/                 # (reservado; os testes em si rodam via `graphsearch --test`)
 └── results/
     ├── scalability.csv
     ├── density.csv
     ├── distance.csv
     ├── heuristic.csv
-    └── dashboard.html      # gerado por scripts/generate_report.py (não versionado por padrão)
+    └── plots/              # gerado por scripts/generate_plots.py (não versionado por padrão)
 ```
 
 O projeto é compilado como um único executável (`graphsearch`) com quatro
@@ -843,8 +842,8 @@ de carregamento de grafos entre "testes" e "programa principal". A pasta
 `tests/` existe conforme a estrutura pedida, mas os testes de corretude em
 si estão integrados ao binário principal (`--test`) para evitar um segundo
 sistema de build/execução separado só para isso — mantendo o projeto sem
-overengineering, como pedido. A visualização (`scripts/generate_report.py`)
-foi deixada fora do C++ deliberadamente: gerar HTML/gráficos não é
-responsabilidade do algoritmo nem do benchmark, e um script Python de ~150
-linhas sem dependências é mais simples do que embutir uma biblioteca de
+overengineering, como pedido. A visualização (`scripts/generate_plots.py`)
+foi deixada fora do C++ deliberadamente: gerar gráficos não é
+responsabilidade do algoritmo nem do benchmark, e um script Python curto
+usando pandas/matplotlib é mais simples do que embutir uma biblioteca de
 plotagem C++ só para isso.
