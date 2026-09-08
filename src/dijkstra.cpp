@@ -7,12 +7,9 @@
 
 namespace {
 
-// Entry stored in the priority queue: (distance, vertex).
 using QueueItem = std::pair<double, int>;
 
 struct CompareByDistance {
-  // std::priority_queue is a max-heap by default, so we invert the
-  // comparison to obtain a min-heap ordered by distance.
   bool operator()(const QueueItem &a, const QueueItem &b) const {
     return a.first > b.first;
   }
@@ -44,8 +41,6 @@ SearchResult dijkstra(const Graph &graph, int source, int target) {
     pq.pop();
     result.nodes_popped++;
 
-    // Lazy deletion: this entry is stale if a shorter distance was
-    // already finalized for u, or if u was already processed.
     if (finalized[static_cast<std::size_t>(u)]) {
       continue;
     }
@@ -53,7 +48,7 @@ SearchResult dijkstra(const Graph &graph, int source, int target) {
     result.nodes_processed++;
 
     if (u == target) {
-      break; // shortest distance to target is finalized
+      break;
     }
 
     for (const auto &edge : graph.adjacency[static_cast<std::size_t>(u)]) {

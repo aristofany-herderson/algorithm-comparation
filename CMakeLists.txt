@@ -22,9 +22,6 @@ add_executable(graphsearch
 
 target_include_directories(graphsearch PRIVATE include)
 
-# Older GCC (<9) requires linking libstdc++fs explicitly for <filesystem>;
-# this is harmless to add unconditionally where the library exists, and a
-# no-op / ignored where it does not.
 include(CheckCXXSourceCompiles)
 set(CMAKE_REQUIRED_LIBRARIES stdc++fs)
 check_cxx_source_compiles("#include <filesystem>\nint main(){ std::filesystem::path p(\".\"); return 0; }" HAVE_STDCXXFS)

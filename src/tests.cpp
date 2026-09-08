@@ -18,9 +18,6 @@ bool costs_match(double a, double b) {
   return std::fabs(a - b) <= kCostTolerance;
 }
 
-// Runs Dijkstra and A* (Euclidean heuristic if geometric, else h=0) on the
-// same graph/source/target and checks that they agree on both
-// "found" status and total cost. Returns true if the check passes.
 bool check_agreement(const char *case_name, const Graph &graph, int source,
                      int target, bool expect_found, double expect_cost) {
   SearchResult dijkstra_result = dijkstra(graph, source, target);
@@ -83,9 +80,8 @@ bool run_randomized_cross_checks() {
   std::printf("-- Randomized cross-check tests (Dijkstra vs A*) --\n");
   bool all_ok = true;
 
-  // Non-geometric random graphs: A* falls back to h(n) = 0.
   {
-    Graph g = generate_random_graph(200, 800, /*seed=*/1);
+    Graph g = generate_random_graph(200, 800, 1);
     std::mt19937 rng(1);
     std::uniform_int_distribution<int> pick(0, g.num_vertices() - 1);
     for (int i = 0; i < 10; ++i) {
@@ -93,15 +89,13 @@ bool run_randomized_cross_checks() {
       int t = pick(rng);
       char name[64];
       std::snprintf(name, sizeof(name), "random_graph_pair_%d", i);
-      all_ok &= check_agreement(name, g, s, t,
-                                /*expect_found=*/dijkstra(g, s, t).found,
+      all_ok &= check_agreement(name, g, s, t, dijkstra(g, s, t).found,
                                 dijkstra(g, s, t).cost);
     }
   }
 
-  // Geometric random graphs: A* uses the Euclidean heuristic.
   {
-    Graph g = generate_geometric_graph(300, 6, /*seed=*/2);
+    Graph g = generate_geometric_graph(300, 6, 2);
     std::mt19937 rng(2);
     std::uniform_int_distribution<int> pick(0, g.num_vertices() - 1);
     for (int i = 0; i < 10; ++i) {
@@ -109,8 +103,7 @@ bool run_randomized_cross_checks() {
       int t = pick(rng);
       char name[64];
       std::snprintf(name, sizeof(name), "geometric_graph_pair_%d", i);
-      all_ok &= check_agreement(name, g, s, t,
-                                /*expect_found=*/dijkstra(g, s, t).found,
+      all_ok &= check_agreement(name, g, s, t, dijkstra(g, s, t).found,
                                 dijkstra(g, s, t).cost);
     }
   }

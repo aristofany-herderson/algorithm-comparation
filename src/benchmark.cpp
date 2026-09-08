@@ -23,8 +23,6 @@ namespace {
 
 using Clock = std::chrono::steady_clock;
 
-// One row of a results CSV. Not every experiment uses every field; unused
-// fields are left at their default ("" or 0) and printed as such.
 struct BenchmarkRow {
   std::string algorithm;
   int num_vertices = 0;
@@ -34,7 +32,7 @@ struct BenchmarkRow {
   int target = 0;
   unsigned seed = 0;
   int repetitions = 0;
-  std::string label; // extra context: distance category or heuristic type
+  std::string label;
 
   Stats time_ms;
 
@@ -50,9 +48,6 @@ struct BenchmarkRow {
 };
 
 void write_csv(const std::string &path, const std::vector<BenchmarkRow> &rows) {
-  // Make sure the destination directory exists instead of assuming it
-  // does (a missing "results/" directory would otherwise make the
-  // ofstream below silently fail to open on some platforms).
   std::filesystem::path fs_path(path);
   if (fs_path.has_parent_path()) {
     std::filesystem::create_directories(fs_path.parent_path());
@@ -79,8 +74,7 @@ void write_csv(const std::string &path, const std::vector<BenchmarkRow> &rows) {
         << ',' << (r.found ? 1 : 0) << ',';
     if (r.found) {
       out << std::setprecision(6) << r.cost;
-    } // else: leave the cost field empty (unreachable target, no cost to
-      // report)
+    }
     out << ',' << std::setprecision(6) << r.time_ms.mean << ','
         << r.time_ms.median << ',' << r.time_ms.min << ',' << r.time_ms.max
         << ',' << r.time_ms.stddev << ',' << r.nodes_processed << ','
@@ -92,10 +86,6 @@ void write_csv(const std::string &path, const std::vector<BenchmarkRow> &rows) {
             << std::flush;
 }
 
-// Times `repetitions` calls to `run_once` (which must execute exactly one
-// Dijkstra/A* call and return its SearchResult). Only the algorithm call
-// itself is measured; counters are taken from the first run since they are
-// deterministic given the same graph/source/target/algorithm.
 BenchmarkRow measure(const std::string &algorithm, const std::string &label,
                      int num_vertices, long long num_edges, double density,
                      int source, int target, unsigned seed, int repetitions,
@@ -211,10 +201,6 @@ void run_distance(const std::string &results_dir) {
   Graph g = generate_geometric_graph(n, k_nearest, seed);
   int source = 0;
 
-  // Rank every other vertex by straight-line distance from the source,
-  // then pick a near, a medium and a far target from that ranking.
-  // Reachability is verified below when computing each row (found=0
-  // would show up plainly in the CSV).
   std::vector<std::pair<double, int>> by_distance;
   auto [sx, sy] = g.coordinates[static_cast<std::size_t>(source)];
   for (int v = 0; v < n; ++v) {

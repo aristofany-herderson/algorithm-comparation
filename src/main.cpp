@@ -74,10 +74,8 @@ void run_examples() {
               << " queue_pushes=" << a.queue_pushes << "\n\n";
   }
 
-  // A small geometric example to also demonstrate the Euclidean heuristic
-  // reducing the number of processed nodes relative to Dijkstra.
   std::cout << "=== geometric_example (grid-like random points) ===\n";
-  Graph g = generate_geometric_graph(50, 6, /*seed=*/2024);
+  Graph g = generate_geometric_graph(50, 6, 2024);
   int source = 0;
   int target = 49;
   SearchResult d = dijkstra(g, source, target);

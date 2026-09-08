@@ -9,8 +9,6 @@ ManualCase make_simple_path_case() {
 }
 
 ManualCase make_multiple_paths_case() {
-  // 0 -> 1 -> 3 costs 1 + 5 = 6
-  // 0 -> 2 -> 3 costs 2 + 2 = 4  (this is the shortest one)
   Graph g(4);
   g.add_undirected_edge(0, 1, 1.0);
   g.add_undirected_edge(1, 3, 5.0);
@@ -20,7 +18,6 @@ ManualCase make_multiple_paths_case() {
 }
 
 ManualCase make_disconnected_case() {
-  // Two separate components: {0,1,2} and {3,4}.
   Graph g(5);
   g.add_undirected_edge(0, 1, 1.0);
   g.add_undirected_edge(1, 2, 1.0);
@@ -36,9 +33,6 @@ ManualCase make_source_equals_target_case() {
 }
 
 ManualCase make_equal_cost_paths_case() {
-  // Two disjoint paths from 0 to 3, both costing exactly 4.
-  // 0 -> 1 -> 3 : 2 + 2 = 4
-  // 0 -> 2 -> 3 : 2 + 2 = 4
   Graph g(4);
   g.add_undirected_edge(0, 1, 2.0);
   g.add_undirected_edge(1, 3, 2.0);

@@ -9,8 +9,6 @@
 
 namespace {
 
-// Encodes an undirected pair (u, v) with u < v into a single 64-bit key,
-// used to avoid inserting duplicate edges when sampling randomly.
 std::uint64_t encode_pair(int u, int v) {
   if (u > v)
     std::swap(u, v);
@@ -39,8 +37,7 @@ Graph generate_random_graph(int num_vertices, long long num_edges,
 
   long long added = 0;
   long long attempts = 0;
-  long long max_attempts =
-      num_edges * 20 + 1000; // avoid infinite loop near max density
+  long long max_attempts = num_edges * 20 + 1000;
 
   while (added < num_edges && attempts < max_attempts) {
     attempts++;
@@ -143,7 +140,6 @@ Graph generate_geometric_graph(int num_vertices, int k_nearest, unsigned seed,
   for (int i = 0; i < num_vertices; ++i) {
     auto [xi, yi] = graph.coordinates[static_cast<std::size_t>(i)];
 
-    // Distance to every other vertex, then keep the k nearest.
     std::vector<std::pair<double, int>> distances;
     distances.reserve(static_cast<std::size_t>(num_vertices - 1));
     for (int j = 0; j < num_vertices; ++j) {

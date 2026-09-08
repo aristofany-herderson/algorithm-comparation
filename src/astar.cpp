@@ -8,8 +8,6 @@
 
 namespace {
 
-// Entry stored in the priority queue: (f = g + h, vertex, g).
-// g is kept alongside f so we can detect staleness without recomputing h.
 struct QueueItem {
   double f;
   int vertex;
@@ -18,7 +16,7 @@ struct QueueItem {
 
 struct CompareByF {
   bool operator()(const QueueItem &a, const QueueItem &b) const {
-    return a.f > b.f; // min-heap on f(n)
+    return a.f > b.f;
   }
 };
 
@@ -29,21 +27,11 @@ Heuristic zero_heuristic() {
 }
 
 Heuristic make_euclidean_heuristic(const Graph &graph, int target) {
-  // Precompute target coordinates by value (plain doubles, not a
-  // structured binding) so the returned lambda is self-contained.
-  // Capturing structured bindings directly in a lambda is only
-  // standardized from C++20 onward; some C++17 toolchains accept it as
-  // an extension and some do not handle it consistently, so we avoid it
-  // entirely here for portability.
   const double target_x =
       graph.coordinates[static_cast<std::size_t>(target)].first;
   const double target_y =
       graph.coordinates[static_cast<std::size_t>(target)].second;
 
-  // Capture a pointer to the coordinates vector (not a local reference
-  // alias) so it's unambiguous what is being captured and for how long
-  // it must remain valid: as long as `graph` (and its caller-owned
-  // storage) is alive, which every call site in this project guarantees.
   const std::vector<std::pair<double, double>> *coords = &graph.coordinates;
 
   return [coords, target_x, target_y](int v) {
@@ -81,9 +69,6 @@ SearchResult astar(const Graph &graph, int source, int target,
     int u = top.vertex;
     double g = top.g;
 
-    // Lazy deletion: skip stale entries (a better g for u was already
-    // finalized, or a shorter path to u was found after this entry
-    // was pushed).
     if (finalized[static_cast<std::size_t>(u)]) {
       continue;
     }
