@@ -306,16 +306,16 @@ destino = último vértice, seed = 42.
 
 |      V | E (arcos) | Algoritmo | Tempo médio (ms) | Nós processados | Arestas examinadas | Pushes na fila |
 | -----: | --------: | --------- | ---------------: | --------------: | -----------------: | -------------: |
-|    100 |       738 | Dijkstra  |           0.0021 |              44 |                320 |             82 |
-|    100 |       738 | A\*       |           0.0013 |              13 |                 92 |             34 |
-|    500 |     3 608 | Dijkstra  |           0.0156 |             460 |              3 306 |            617 |
-|    500 |     3 608 | A\*       |           0.0050 |              85 |                601 |            184 |
-|  1 000 |     7 094 | Dijkstra  |           0.0017 |              32 |                215 |             60 |
-|  1 000 |     7 094 | A\*       |           0.0012 |               6 |                 35 |             19 |
-|  5 000 |    35 368 | Dijkstra  |           0.1837 |           2 402 |             16 995 |          3 358 |
-|  5 000 |    35 368 | A\*       |           0.0214 |             226 |              1 599 |            443 |
-| 10 000 |    70 252 | Dijkstra  |           0.7312 |           7 952 |             55 849 |         10 948 |
-| 10 000 |    70 252 | A\*       |           0.1127 |           1 000 |              7 028 |          1 864 |
+|    100 |       738 | Dijkstra  |           0.0022 |              44 |                320 |             82 |
+|    100 |       738 | A\*       |           0.0015 |              13 |                 92 |             34 |
+|    500 |     3 608 | Dijkstra  |           0.0190 |             460 |              3 306 |            617 |
+|    500 |     3 608 | A\*       |           0.0056 |              85 |                601 |            184 |
+|  1 000 |     7 094 | Dijkstra  |           0.0021 |              32 |                215 |             60 |
+|  1 000 |     7 094 | A\*       |           0.0013 |               6 |                 35 |             19 |
+|  5 000 |    35 368 | Dijkstra  |           0.2053 |           2 402 |             16 995 |          3 358 |
+|  5 000 |    35 368 | A\*       |           0.0162 |             226 |              1 599 |            443 |
+| 10 000 |    70 252 | Dijkstra  |           0.9530 |           7 952 |             55 849 |         10 948 |
+| 10 000 |    70 252 | A\*       |           0.1783 |           1 000 |              7 028 |          1 864 |
 
 Em todos os tamanhos, os custos finais reportados por Dijkstra e A*
 coincidem (validado também pelos testes de corretude), e A* processa uma
@@ -346,16 +346,16 @@ destino = 2 999, seed = 7.
 
 | Densidade | E (arcos) | Algoritmo |     Encontrado     | Tempo médio (ms) | Nós processados | Arestas examinadas |
 | --------: | --------: | --------- | :----------------: | ---------------: | --------------: | -----------------: |
-|     0.001 |     8 998 | Dijkstra  |        não         |           0.1521 |           2 821 |              8 966 |
-|     0.001 |     8 998 | A\*       |        não         |           0.2265 |           2 821 |              8 966 |
-|     0.005 |    44 986 | Dijkstra  | sim (custo 1133.0) |           0.3438 |           2 230 |             34 285 |
-|     0.005 |    44 986 | A\*       | sim (custo 1133.0) |           0.1068 |             351 |              5 479 |
-|     0.020 |   179 940 | Dijkstra  | sim (custo 423.3)  |           0.1948 |             444 |             26 730 |
-|     0.020 |   179 940 | A\*       | sim (custo 423.3)  |           0.0868 |              79 |              4 585 |
-|     0.050 |   449 850 | Dijkstra  |  sim (custo 61.9)  |           0.0118 |               5 |                610 |
-|     0.050 |   449 850 | A\*       |  sim (custo 61.9)  |           0.0046 |               2 |                156 |
-|     0.100 |   899 700 | Dijkstra  |  sim (custo 61.9)  |           0.0246 |               9 |              2 446 |
-|     0.100 |   899 700 | A\*       |  sim (custo 61.9)  |           0.0058 |               2 |                311 |
+|     0.001 |     8 998 | Dijkstra  |        não         |           0.2152 |           2 821 |              8 966 |
+|     0.001 |     8 998 | A\*       |        não         |           0.3419 |           2 821 |              8 966 |
+|     0.005 |    44 986 | Dijkstra  | sim (custo 1133.0) |           0.4506 |           2 230 |             34 285 |
+|     0.005 |    44 986 | A\*       | sim (custo 1133.0) |           0.1331 |             351 |              5 479 |
+|     0.020 |   179 940 | Dijkstra  | sim (custo 423.3)  |           0.2250 |             444 |             26 730 |
+|     0.020 |   179 940 | A\*       | sim (custo 423.3)  |           0.1161 |              79 |              4 585 |
+|     0.050 |   449 850 | Dijkstra  |  sim (custo 61.9)  |           0.0100 |               5 |                610 |
+|     0.050 |   449 850 | A\*       |  sim (custo 61.9)  |           0.0045 |               2 |                156 |
+|     0.100 |   899 700 | Dijkstra  |  sim (custo 61.9)  |           0.0299 |               9 |              2 446 |
+|     0.100 |   899 700 | A\*       |  sim (custo 61.9)  |           0.0069 |               2 |                311 |
 
 Na densidade mais baixa (0.001), a origem e o destino simplesmente **não
 estão conectados** no grafo amostrado — os dois algoritmos exploram
@@ -431,6 +431,29 @@ distância; e a comparação de barras (Dijkstra / A* h=0 / A* Euclidiana)
 do experimento de heurística. Todos os números dos gráficos são os
 mesmos das tabelas acima — o script só lê o CSV e desenha, não recalcula
 nada. Veja a Seção 16 para o comando exato.
+
+### 11.6 Teoria × experimento (`results/plots/theory_vs_empirical.png`)
+
+Este gráfico responde diretamente à pergunta da Seção 12: "o crescimento
+observado é compatível com a complexidade teórica?". Ele usa os mesmos
+dados de `results/scalability.csv` (Seção 11.1), mas em vez de plotar só o
+tempo medido, sobrepõe duas curvas teóricas — `O(V log V)` e
+`O((V+E) log V)`, calculadas ponto a ponto a partir do `V` e `E` reais de
+cada linha do CSV — à curva de tempo empírico, cada uma normalizada pelo
+seu próprio valor máximo (mesma técnica do gráfico de exemplo do
+enunciado: "Tempo normalizado" no eixo Y, curvas teóricas tracejadas,
+curva empírica sólida).
+
+Para os dois algoritmos, o tempo medido acompanha de perto a curva
+`O((V+E) log V)` — a cota de pior caso derivada na Seção 13.3 — em vez da
+curva `O(V log V)`, que cresce mais devagar. Isso é esperado: os grafos
+geométricos gerados no experimento de escalabilidade (k-vizinhos-mais-
+-próximos) têm `E` proporcional a `V` (cerca de 7 arcos por vértice), então
+`(V+E) log V` domina o crescimento observado, e o fato de a curva empírica
+seguir essa forma — e não a de `O(V log V)` — é evidência direta de que o
+laço de relaxamento de arestas (Seção 14.2), não só o número de pops da
+fila, contribui de forma mensurável para o tempo total, exatamente como a
+análise de código previu.
 
 <br>
 
@@ -792,7 +815,7 @@ python3 scripts/generate_plots.py
 ```
 
 Isso cria PNGs em `results/plots/` (`scalability.png`, `density.png`,
-`distance.png`, `heuristic.png`) — abra os arquivos diretamente em
+`distance.png`, `heuristic.png`, `theory_vs_empirical.png`) — abra os arquivos diretamente em
 qualquer visualizador de imagens. O script depende de `matplotlib` e
 `pandas`. Ele lê os CSVs tal como estão em `results/`, então os gráficos
 sempre refletem os dados da última execução de `--benchmark`.

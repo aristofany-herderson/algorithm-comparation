@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import math
 import os
 import sys
 
@@ -89,7 +90,7 @@ def plot_scalability():
     ax.legend()
     ax.grid(True, which="both", linestyle="--", alpha=0.4)
 
-    fig.suptitle("Dijkstra vs A* — Experimento de Escalabilidade")
+    fig.suptitle("Dijkstra vs A* - Experimento de Escalabilidade")
     save(fig, "scalability.png")
 
 
@@ -134,7 +135,7 @@ def plot_density():
     ax.legend()
     ax.grid(True, which="both", linestyle="--", alpha=0.4)
 
-    fig.suptitle("Dijkstra vs A* — Experimento de Densidade")
+    fig.suptitle("Dijkstra vs A* - Experimento de Densidade")
     save(fig, "density.png")
 
 
@@ -189,7 +190,7 @@ def plot_distance():
     ax.legend()
     ax.grid(True, axis="y", linestyle="--", alpha=0.4)
 
-    fig.suptitle("Dijkstra vs A* — Experimento de Distância")
+    fig.suptitle("Dijkstra vs A* - Experimento de Distância")
     save(fig, "distance.png")
 
 
@@ -219,8 +220,56 @@ def plot_heuristic():
     ax.grid(True, axis="y", linestyle="--", alpha=0.4)
     ax.tick_params(axis="x", rotation=15)
 
-    fig.suptitle("Dijkstra vs A* — Impacto da Heurística")
+    fig.suptitle("Dijkstra vs A* - Impacto da Heurística")
     save(fig, "heuristic.png")
+
+
+def plot_theory_vs_empirical():
+    df = load_csv("scalability.csv")
+    if df is None:
+        return
+
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5.5))
+
+    theory_specs = [
+        ("O(V log V)", lambda v, e: v * math.log2(v), "--", "#7f7f7f"),
+        ("O((V+E) log V)", lambda v, e: (v + e) * math.log2(v), "--", "#2ca02c"),
+    ]
+
+    for ax, algo in zip(axes, ["dijkstra", "astar_euclidean"]):
+        group = df[df["algorithm"] == algo].sort_values("num_vertices")
+        if group.empty:
+            continue
+
+        v = group["num_vertices"].to_numpy()
+        e = group["num_edges"].to_numpy()
+        t = group["mean_time_ms"].to_numpy()
+        t_norm = t / t.max()
+
+        ax.plot(
+            v,
+            t_norm,
+            marker="o",
+            color=ALGO_COLORS.get(algo),
+            label=f"{ALGO_LABELS.get(algo, algo)} (empírico)",
+            linewidth=2,
+        )
+
+        for name, fn, style, color in theory_specs:
+            theory = [fn(vi, ei) for vi, ei in zip(v, e)]
+            theory_max = max(theory)
+            theory_norm = [x / theory_max for x in theory]
+            ax.plot(v, theory_norm, style, color=color, label=f"{name} teórico")
+
+        ax.set_xscale("log")
+        ax.set_xlabel("Número de vértices (V)")
+        ax.set_ylabel("Tempo normalizado")
+        ax.set_title(f"{ALGO_LABELS.get(algo, algo)}: teoria x experimento")
+        ax.legend(fontsize=8)
+        ax.grid(True, which="both", linestyle="--", alpha=0.4)
+
+    fig.suptitle("Comparação entre análise teórica e empírica (Dijkstra vs A*)")
+    save(fig, "theory_vs_empirical.png")
 
 
 def main():
@@ -228,6 +277,7 @@ def main():
     plot_density()
     plot_distance()
     plot_heuristic()
+    plot_theory_vs_empirical()
 
 
 if __name__ == "__main__":
